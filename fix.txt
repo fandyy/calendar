@@ -1,0 +1,92 @@
+=========================// 1 //======================
+添加自定义登录表单（自定义的表单将不再使用默认的spring_security_login请求，如果要设置访问权限需要单独配置，这也是为什么书中第二步死循环的原因）
+<form-login login-page="/login/form"               /**登录页面地址*/
+                    login-processing-url="/login"  /**action=*/
+                    username-parameter="username"  /**用户名别名，用来替代默认的j_username；好处是这个再页面上的内容让人发现是security。
+                    password-parameter="password"
+                    authentication-failure-url="/login/form?error"/> /**错误*/
+        <logout logout-url="/logout"
+                logout-success-url="/login/form?logout"/>
+				
+	/**
+	*这个书中貌似没有解释
+	*/
+	@Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        super.addViewControllers(registry);
+        registry.addViewController("/login/form")
+                .setViewName("login");
+    }
+	
+	
+=========================// 3 //======================
+<http pattern="/resources/**" security="none"/>           /** <http><intercept-url> 优先级的问题 */
+
+        <intercept-url pattern="/login/*"
+                       access="ROLE_ANONYMOUS,ROLE_USER"/>         /** ROLE_ANONYMOUS 并没有智能的包含ROLE_USER ,如果去掉，登录的用户反而进不了这个登录页面*/
+        <intercept-url pattern="/**" access="ROLE_USER"/>          /**顺序的问题*/
+		
+		
+=========================// 4 //======================
+		 use-expressions="true
+		 
+        <intercept-url pattern="/"
+                       access="permitAll"/>
+        <intercept-url pattern="/login/*"
+                       access="permitAll"/>
+        <intercept-url pattern="/logout"
+                       access="permitAll"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/events/" access="hasRole('ROLE_ADMIN')"/>
+
+        <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+		/*** 使用表达式 */
+		
+=========================// 5 //====================== //添加spring sec 表达式标签
+页面添加
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+		//依赖
+	<dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-taglibs</artifactId>
+      <version>3.1.0.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+	
+	//具体的使用案例
+	<sec:authorize access="authenticated" var="authenticated"/>
+                            <c:choose>
+                                <c:when test="${authenticated}">
+                                    <li id="greeting"><div>Welcome <sec:authentication property="name" /></div></li>
+                                    <c:url var="logoutUrl" value="/logout"/>
+                                    <li><a id="navLogoutLink" href="${logoutUrl}">Logout</a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:url var="loginUrl" value="/login/form"/>
+                                    <li><a id="navLoginLink" href="${loginUrl}">Login</a></li>
+                                </c:otherwise>
+                            </c:choose>
+		
+		
+		
+=========================// 6 //====================== //添加 默认显示页面
+		在form 标签中添加 default-target-url="/default"
+		对应的需要一个controller，控制器
+		@Controller
+public class DefaultController {
+
+    @RequestMapping("/default")
+    public String defaultAfterLogin(HttpServletRequest request) {
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            return "redirect:/events/";
+        }
+        return "redirect:/";
+    }
+}
+
+
+
+
+
+		
