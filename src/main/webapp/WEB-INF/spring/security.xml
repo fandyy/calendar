@@ -45,7 +45,6 @@
                         authorities="ROLE_USER,ROLE_ADMIN"/>
             </user-service>
 			-->
-
         </authentication-provider>
     </authentication-manager>
 </bean:beans>
