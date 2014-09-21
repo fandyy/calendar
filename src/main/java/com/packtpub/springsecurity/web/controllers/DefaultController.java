@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * >default-target-url</a> and then programmatically determine where to send the user afterwards.
  * </p>
  * <p>
- * This has advantages over implementing {@link org.springframework.security.web.authentication.AuthenticationSuccessHandler} in that it is in no way tied to Spring
+ * This has advantages over implementing {@link AuthenticationSuccessHandler} in that it is in no way tied to Spring
  * Security. Despite using Spring MVC for this, we could just have easily processed the url /default with another type
  * of controller like a Servlet or Struts Action so it is not required to use Spring MVC to use this approach.
  * </p>

@@ -110,11 +110,11 @@ public class JdbcEventDao implements EventDao {
             CalendarUser owner = OWNER_ROW_MAPPER.mapRow(rs, rowNum);
 
             Event event = new Event();
-            event.setId(rs.getInt("e.id"));
-            event.setSummary(rs.getString("e.summary"));
-            event.setDescription(rs.getString("e.description"));
+            event.setId(rs.getInt("events.id"));
+            event.setSummary(rs.getString("events.summary"));
+            event.setDescription(rs.getString("events.description"));
             Calendar when = Calendar.getInstance();
-            when.setTime(rs.getDate("e.when"));
+            when.setTime(rs.getDate("events.when"));
             event.setWhen(when);
             event.setAttendee(attendee);
             event.setOwner(owner);
