@@ -1,5 +1,15 @@
 3.02~3.03
 <authentication-provider
 user-service-ref="calendarUserDetailsService"/>
-1、CalendarUserDetailsService is added to our Spring configuration automatically, since we leverage classpath scanning and the @Component annotation.
-2、Create a new class named CalendarUserDetailsService that will make Spring Security aware of our CalendarUser object.
+1、CalendarUserDetailsService is added to our Spring configuration automatically, since we leverage
+classpath scanning and the @Component annotation.
+2、Create a new class named CalendarUserDetailsService that will make Spring Security aware of our
+CalendarUser object.
+3、Removing references to UserDetailsManager
+  We need to remove the code we added in the DefaultCalendarService
+  that used UserDetailsManager to synchronize the Spring Security users
+  and CalendarUsers.
+
+3.03~3.04
+1、we will create a CalendarUserDetails
+object, which can be referred to as both UserDetails and CalendarUser.
