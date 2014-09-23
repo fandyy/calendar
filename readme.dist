@@ -13,3 +13,10 @@ CalendarUser object.
 3.03~3.04
 1、we will create a CalendarUserDetails
 object, which can be referred to as both UserDetails and CalendarUser.
+ return (CalendarUser) authentication.getPrincipal(); 获得当前已认证的用户的名字（obtain the name of the currently authenticated user）
+2、<div>
+  Welcome <sec:authentication property="principal.name" />
+  </div>
+
+3.04~3.05
+1、Creating a custom AuthenticationProvider object;
